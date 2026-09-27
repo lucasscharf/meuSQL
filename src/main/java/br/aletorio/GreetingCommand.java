@@ -17,13 +17,23 @@ public class GreetingCommand implements Runnable {
       System.out.print(">>>");
       String command = scanner.nextLine();
 
-      if ("exit".equalsIgnoreCase(command)) {
-        System.exit(0);
-        ;
-      }
+      Statement statement = Statement.fromCommand(command);
 
-      if (!command.isBlank()) {
-        System.out.println(String.format("Command %s not valid", command));
+      switch (statement) {
+        case EXIT:
+          System.exit(0);
+          break;
+
+        case SELECT:
+          System.out.println("Selecionou");
+          break;
+
+        case INSERT:
+          System.out.println("INseriu");
+          break;
+        case NOT_FOUND:
+          System.out.println(String.format("Command %s not valid", command));
+          break;
       }
     }
   }
@@ -39,7 +49,7 @@ enum Statement {
     this.command = command;
   }
 
-  public Statement fromCommand(String command) {
+  public static Statement fromCommand(String command) {
     Statement[] statements = Statement.values();
     for (Statement statement : statements) {
       if (statement != NOT_FOUND && command.toLowerCase().startsWith(statement.command))
