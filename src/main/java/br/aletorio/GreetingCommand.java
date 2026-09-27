@@ -2,20 +2,49 @@ package br.aletorio;
 
 import java.util.Scanner;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
 
 @Command(name = "greeting", mixinStandardHelpOptions = true)
 public class GreetingCommand implements Runnable {
 
-  @Parameters(paramLabel = "<name>", defaultValue = "picocli", description = "Your name.")
-  String name;
-
   Scanner scanner = new Scanner(System.in);
+
   @Override
   public void run() {
-    System.out.printf("Hello %s, go go commando!%n", name);
+    System.out.println("SQLite done for study... type ctrl+c to exit");
+
+    while (true) {
+      System.out.print(">>>");
+      String command = scanner.nextLine();
+
+      if ("exit".equalsIgnoreCase(command)) {
+        System.exit(0);
+        ;
+      }
+
+      if (!command.isBlank()) {
+        System.out.println(String.format("Command %s not valid", command));
+      }
+    }
   }
 
+}
+
+enum Statement {
+  EXIT("exit"), SELECT("select"), INSERT("insert"), NOT_FOUND(null);
+
+  final String command;
+
+  Statement(String command) {
+    this.command = command;
+  }
+
+  public Statement fromCommand(String command) {
+    Statement[] statements = Statement.values();
+    for (Statement statement : statements) {
+      if (statement != NOT_FOUND && command.toLowerCase().startsWith(statement.command))
+        return statement;
+    }
+    return NOT_FOUND;
+  }
 }
